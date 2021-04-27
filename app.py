@@ -10,8 +10,23 @@ from nltk.stem.snowball import SnowballStemmer
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
-st.title("Crypto-currency")
-st.markdown("This application aims to inform you about the news of the crypto currency ")
+# Setup de la page
+st.set_page_config(layout="wide")
+st.title("Agrégateur d' information sur la Cryptommonaie")
+st.markdown("""
+## Application
+""")
+
+# La bare d'information
+extend_bar = st.beta_expander("Information")
+extend_bar.markdown("""
+- **Description du projet** : Dans le cadre du cours de NoSQL, nous devons scrapper des données sur internet et les valoriser.
+Nous avons choisit de récupérer des données en rapport avec la cryptomonnaie pour permettre une accessibilité et une facilité d'accès à la connaissance de la cryptomonnaie.
+- **Développeurs** : Quentin Pierson et Toky Cedric Andriamahefa
+- **Framework** : Streamlit, Python, Scrapy, 
+- **Base de données** : MongoDB
+- **Source** : Cryptonaute, GoogleNews, CoinMarketCap
+""")
 
 
 # -------------------------
@@ -43,6 +58,7 @@ def load_data():
     return df2
 
 
+st.markdown(" ## Load Database ")
 dataArticle = load_data()
 st.write(dataArticle)
 
