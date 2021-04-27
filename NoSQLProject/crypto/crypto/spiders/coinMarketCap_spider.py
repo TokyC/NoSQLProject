@@ -19,7 +19,7 @@ class CoinMarketCapSpider(scrapy.Spider) :
             symbol = cryptos.css('.coin-item-symbol::text').extract()
             price = cryptos.css('.price___3rj7O .cmc-link::text').extract()
             percent_change_24h = cryptos.css('td:nth-child(5) .sc-1v2ivon-0::text').extract()
-            percent_24 = cryptos.css('td:nth-child(5) .fJLBDK span::attr(class)').extract()
+            percent_24 = cryptos.css('td:nth-child(5) .sc-1v2ivon-0 span::attr(class)').extract()
             percent_change_7d = cryptos.css('td:nth-child(6) .sc-1v2ivon-0::text').extract()
             percent_7 = cryptos.css('td:nth-child(6) .sc-1v2ivon-0 span::attr(class)').extract()
             market_cap = cryptos.css('td > .kDEzev::text').extract()
