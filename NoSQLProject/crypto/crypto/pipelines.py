@@ -17,7 +17,7 @@ class CryptoPipeline :
 
         # Connection à la DB
         self.conn = pymongo.MongoClient(
-            "mongodb+srv://Toky:NoSQLProject2021@cluster0.squca.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+            "mongodb://127.0.0.1:27017/articles"
         )
 
     def process_item(self, article, spider) :

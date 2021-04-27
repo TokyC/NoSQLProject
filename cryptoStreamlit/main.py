@@ -30,12 +30,11 @@ Nous avons choisit de récupérer des données en rapport avec la cryptomonnaie 
 @st.cache(hash_funcs={pymongo.MongoClient : id})
 def get_client() :
     return pymongo.MongoClient(
-        "mongodb+srv://Toky:NoSQLProject2021@cluster0.squca.mongodb.net/googleNews?retryWrites=true&w=majority")
-
+            "mongodb://127.0.0.1:27017/articles"
+    )
 
 client = get_client()
 db = client["articles"]
-
 # Crétation des trois colonnes
 side_part = st.sidebar
 
@@ -43,12 +42,13 @@ side_part = st.sidebar
 middle_page, right_side = st.beta_columns((2, 1))
 
 # Partie coinMarket
-dbmarket = "cryptoMarket"
+dbmarket = "coinMarket"
 
 
 # Chargement des données de coinmarket cap avec reformatage des données
 def load_market_data() :
     df_markets = pd.DataFrame(list(db[dbmarket].find()))
+    print(df_markets)
     df_markets.pop("_id")
 
     for i in range(len(df_markets['percent_change_24h'])) :
