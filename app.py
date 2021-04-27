@@ -18,7 +18,7 @@ st.markdown("""
 extend_bar = st.beta_expander("Information")
 extend_bar.markdown("""
 - **Description du projet** : Dans le cadre du cours de NoSQL, nous devons scrapper des données sur internet et les valoriser.
-Nous avons choisit de récupérer des données en rapport avec la cryptomonnaie pour permettre une accessibilité et une facilité d'accès à la connaissance de la cryptomonnaie.
+Nous avons choisi de récupérer des données en rapport avec la cryptomonnaie pour permettre une accessibilité et une facilité d'accès à la connaissance de la cryptomonnaie.
 - **Développeurs** : Quentin Pierson et Toky Cedric Andriamahefa
 - **Framework** : Streamlit, Python, Scrapy, 
 - **Base de données** : MongoDB
@@ -39,7 +39,7 @@ clientCrypto = get_client()
 dbCrypto = clientCrypto["crypto"]
 
 st.sidebar.subheader("MongoDB:")
-coll_name = st.sidebar.selectbox("Select collection: ", dbCrypto.list_collection_names())
+colle_name = st.sidebar.selectbox("Select collection: ", dbCrypto.list_collection_names())
 
 
 def connexion(db_name, col_name):
@@ -47,7 +47,7 @@ def connexion(db_name, col_name):
     return conn[db_name][col_name]
 
 
-articles = connexion("crypto", coll_name)
+articles = connexion("crypto", colle_name)
 
 
 def load_data():
@@ -56,7 +56,13 @@ def load_data():
     return df2
 
 
-st.markdown(" ## Load Database ")
+x = colle_name
+if colle_name == "collectionReddit":
+    x = "Reddit"
+else:
+    x = "Twitter"
+
+st.markdown(f""" ## Chargement Database : {x}""")
 dataArticle = load_data()
 st.write(dataArticle)
 
@@ -133,21 +139,26 @@ side_part.write("Vous avez choisis : " + type_of_cryptocurrency)
 
 # partie 2 du side_part
 # On load les datas depuis la collection séléctionnée
-coll_name = side_part.selectbox("Choisissez la collection: ", db.list_collection_names())
+# coll_name = side_part.selectbox("Choisissez la collection: ", db.list_collection_names())
 
 
-def load_mongo_data():
-    df = pd.DataFrame(list(db[coll_name].find()))
-    df.pop("_id")
+# def load_mongo_data():
+#   df = pd.DataFrame(list(db[coll_name].find()))
+#  df.pop("_id")
 
-    return df
+#   return df
 
 
-article = load_mongo_data()
+# article = load_mongo_data()
 
 # Partie 3
-crypto_selected = side_part.multiselect('Cryptomonnaie ', crypto_ordre, crypto_ordre)
-df_crypto_selected = df_market[(df_market['Symbole'].isin(crypto_selected))]
+crypto_selected = side_part.multiselect('Cryptomonnaie ', crypto_ordre, )
+c_selected = crypto_selected
+if not crypto_selected:
+    c_selected = ['BTC']
+
+df_crypto_selected = df_market[(df_market['Symbole'].isin(c_selected))]
+
 interval_pourcentage = side_part.selectbox('La période de la variation', ['7j', '24h'])
 type_variation = {"7j": 'Variation en 7j', "24h": 'Variation en 24h'}
 choix_variation = type_variation[interval_pourcentage]
@@ -205,7 +216,7 @@ df_price['Prix ($)'].plot(kind='barh', color='b')
 middle_page.pyplot(plt)
 
 # *** Affichage des articles ***
-
+middle_page.markdown("---")
 middle_page.title('Articles du jour')
 google_collection_name = 'googleNews'
 
