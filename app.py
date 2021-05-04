@@ -42,7 +42,7 @@ def get_client():
 clientCrypto = get_client()
 dbCrypto = clientCrypto["crypto"]
 
-st.sidebar.subheader("MongoDB:")
+st.sidebar.subheader("Options:")
 colle_name = st.sidebar.selectbox("Select collection: ", dbCrypto.list_collection_names())
 
 
@@ -67,9 +67,6 @@ else:
     x = "Twitter"
 
 dataArticle = load_data()
-st.write(dataArticle)
-
-st.markdown("![Alt Text](https://media.giphy.com/media/a4R8RvRWfYZTG/source.gif)")
 
 
 # -----------------------------------------------------------------------
@@ -77,56 +74,29 @@ st.markdown("![Alt Text](https://media.giphy.com/media/a4R8RvRWfYZTG/source.gif)
 # -----------------------------------------------------------------------
 
 def afficherTweet(author, url, texte, likes, retweet, date, polarity, subjectivity):
-    st.markdown(f"""
+    middle_page.markdown(f"""
     > {texte}
     >
     > - Author : {author} [{date}]({url})
     > - Likes : {likes} - Retweet {retweet}
     > - Polartié : {polarity} - Subjectivité {subjectivity} 
-    > ---
+    >
     """)
 
 
 def afficherReddit(title, Author, score, url, texte, date):
-    st.markdown(f"""
-    > {title}
-    > ---
+    middle_page.markdown(f"""
+    > ### {title} 
+    >
+    > ***
     > {texte}
     > 
-    > - Author : {Author} [{date}]({url})
+    > - Author : {Author} [{date}]({url}) (cliquer sur la date pour voir le tweet) 
     > - Score : {score}
     """)
 
 
-@st.cache
-def sortDataframe(df, col):
-    df.sort_values(by=[col])
-
-
-sortSelected = st.multiselect('Select sort', ["likes","author","dates",])
-
-
-
-if colle_name == "collectionReddit":
-    for i in range(8, 9):
-        title = dataArticle['Title'][i]
-        Author = dataArticle['Author'][i]
-        text = dataArticle['Body'][i]
-        score = dataArticle['Score'][i]
-        date = dataArticle['timestamp'][i]
-        url = dataArticle['Url'][i]
-        afficherReddit(title, Author, score, url, text, date)
-else:
-    for i in range(1, 4):
-        author = dataArticle['author'][i]
-        text = dataArticle['tweets'][i]
-        likes = dataArticle['likes'][i]
-        retweet = dataArticle['retweet'][i]
-        date = dataArticle['times'][i]
-        polarity = dataArticle['Polarity'][i]
-        subjectivity = dataArticle['Subjectivity'][i]
-        url = dataArticle['url'][i]
-        afficherTweet(author, url, text, likes, retweet, date, polarity, subjectivity)
+slider = st.sidebar.slider("Choisissez le nombre de poste à afficher", 1, 20, 1)
 # -----------------------------------------------------------------------
 # |                      Connexion BDD Articles                           |
 # -----------------------------------------------------------------------
@@ -240,7 +210,7 @@ def getPrix(symbole):
             return df_market['Prix ($)'][i]
 
 
-middle_page.markdown("---")
+right_side.markdown("![Alt Text](https://media.giphy.com/media/9FQ89bO3TipLASwmRs/giphy.gif)")
 
 middle_page.markdown(f"""
 # Prix du {type_of_cryptocurrency}
@@ -280,7 +250,36 @@ plt.subplots_adjust(top=1, bottom=0)
 df_price['Prix ($)'].plot(kind='barh', color='b')
 middle_page.pyplot(plt)
 
-# *** Affichage des articles ***
+# -----------------------------------------------------------------------
+#                           Afficher data
+# -----------------------------------------------------------------------
+middle_page.markdown("---")
+middle_page.title(f"Affichage des {x} ")
+
+if colle_name == "collectionReddit":
+    for i in range(slider):
+        title = dataArticle['Title'][i]
+        Author = dataArticle['Author'][i]
+        text = dataArticle['Body'][i]
+        score = dataArticle['Score'][i]
+        date = dataArticle['timestamp'][i]
+        url = dataArticle['Url'][i]
+        afficherReddit(title, Author, score, url, text, date)
+else:
+    for i in range(slider):
+        author = dataArticle['author'][i]
+        text = dataArticle['tweets'][i]
+        likes = dataArticle['likes'][i]
+        retweet = dataArticle['retweet'][i]
+        date = dataArticle['times'][i]
+        polarity = dataArticle['Polarity'][i]
+        subjectivity = dataArticle['Subjectivity'][i]
+        url = dataArticle['url'][i]
+        afficherTweet(author, url, text, likes, retweet, date, polarity, subjectivity)
+
+# -----------------------------------------------------------------------
+#                           Affichage des articles
+# -----------------------------------------------------------------------
 middle_page.markdown("---")
 middle_page.title('Articles du jour')
 google_collection_name = 'googleNews'
