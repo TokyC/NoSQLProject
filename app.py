@@ -1,20 +1,24 @@
 import pymongo
 import streamlit as st
 import pandas as pd
-import numpy as np
-import base64
 import matplotlib.pyplot as plt
-import json
-import time
+import requests
+import streamlit.components.v1 as components
 
-# Setup de la page
+# -----------------------------------------------------------------------
+#                       Setup de la page
+# -----------------------------------------------------------------------
+
 st.set_page_config(layout="wide")
 st.title("Agrégateur d' information sur la Cryptommonaie")
 st.markdown("""
 ## Application
 """)
 
-# La bare d'information
+# -----------------------------------------------------------------------
+#                       Barre d'information
+# -----------------------------------------------------------------------
+
 extend_bar = st.beta_expander("Information")
 extend_bar.markdown("""
 - **Description du projet** : Dans le cadre du cours de NoSQL, nous devons scrapper des données sur internet et les valoriser.
@@ -26,9 +30,9 @@ Nous avons choisi de récupérer des données en rapport avec la cryptomonnaie p
 """)
 
 
-# -------------------------
-# Connexion
-# -------------------------
+# -----------------------------------------------------------------------
+# |                      Connexion BDD Crypto                           |
+# -----------------------------------------------------------------------
 
 @st.cache(hash_funcs={pymongo.MongoClient: id})
 def get_client():
@@ -62,9 +66,70 @@ if colle_name == "collectionReddit":
 else:
     x = "Twitter"
 
-st.markdown(f""" ## Chargement Database : {x}""")
 dataArticle = load_data()
 st.write(dataArticle)
+
+st.markdown("![Alt Text](https://media.giphy.com/media/a4R8RvRWfYZTG/source.gif)")
+
+
+# -----------------------------------------------------------------------
+#                       Connexion EMBED TWEET
+# -----------------------------------------------------------------------
+
+def afficherTweet(author, url, texte, likes, retweet, date, polarity, subjectivity):
+    st.markdown(f"""
+    > {texte}
+    >
+    > - Author : {author} [{date}]({url})
+    > - Likes : {likes} - Retweet {retweet}
+    > - Polartié : {polarity} - Subjectivité {subjectivity} 
+    > ---
+    """)
+
+
+def afficherReddit(title, Author, score, url, texte, date):
+    st.markdown(f"""
+    > {title}
+    > ---
+    > {texte}
+    > 
+    > - Author : {Author} [{date}]({url})
+    > - Score : {score}
+    """)
+
+
+@st.cache
+def sortDataframe(df, col):
+    df.sort_values(by=[col])
+
+
+sortSelected = st.multiselect('Select sort', ["likes","author","dates",])
+
+
+
+if colle_name == "collectionReddit":
+    for i in range(8, 9):
+        title = dataArticle['Title'][i]
+        Author = dataArticle['Author'][i]
+        text = dataArticle['Body'][i]
+        score = dataArticle['Score'][i]
+        date = dataArticle['timestamp'][i]
+        url = dataArticle['Url'][i]
+        afficherReddit(title, Author, score, url, text, date)
+else:
+    for i in range(1, 4):
+        author = dataArticle['author'][i]
+        text = dataArticle['tweets'][i]
+        likes = dataArticle['likes'][i]
+        retweet = dataArticle['retweet'][i]
+        date = dataArticle['times'][i]
+        polarity = dataArticle['Polarity'][i]
+        subjectivity = dataArticle['Subjectivity'][i]
+        url = dataArticle['url'][i]
+        afficherTweet(author, url, text, likes, retweet, date, polarity, subjectivity)
+# -----------------------------------------------------------------------
+# |                      Connexion BDD Articles                           |
+# -----------------------------------------------------------------------
 
 client = get_client()
 db = client["articles"]
