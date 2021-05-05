@@ -8,11 +8,8 @@ Nous avons choisit de récupérer des données en rapport avec la cryptomonnaie 
 ## Installions
 
 Pour installer le projet faite un 
-* git clone https://github.com/TokyC/NoSQLProject puis installer 
-* un pip install -r requirements.txt
-Quand cela est fait, vous pouvez utiliser notre application en lançants soit un 
-* streamlit run app.py ou alors 
-* un jupyter notebook
+git clone https://github.com/TokyC/NoSQLProject puis installer  un pip install -r requirements.txt
+Quand cela est fait, vous pouvez utiliser notre application en lançants soit un streamlit run app.py ou alors un jupyter notebook
 
 
 ## Technos utilisées
